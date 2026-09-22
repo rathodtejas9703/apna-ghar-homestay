@@ -397,22 +397,22 @@
 
   <section>
     <div class="quick-grid">
-      <button class="qbtn" onclick="toggleSection('nearbyPanel', this)">
+      <button class="qbtn" aria-controls="nearbyPanel" aria-expanded="false" onclick="toggleSection('nearbyPanel', this)">
         <span class="ico">🗺️</span>
         <span class="label">Explore Nearby</span>
         <span class="sub">Ghats, temples &amp; markets</span>
       </button>
-      <button class="qbtn" onclick="toggleSection('templePanel', this)">
+      <button class="qbtn" aria-controls="templePanel" aria-expanded="false" onclick="toggleSection('templePanel', this)">
         <span class="ico">🛕</span>
         <span class="label">Temple &amp; Aarti Timings</span>
         <span class="sub">Kashi Vishwanath &amp; more</span>
       </button>
-      <button class="qbtn" onclick="toggleSection('foodPanel', this)">
+      <button class="qbtn" aria-controls="foodPanel" aria-expanded="false" onclick="toggleSection('foodPanel', this)">
         <span class="ico">🍛</span>
         <span class="label">Local Food to Try</span>
         <span class="sub">Chaat, kachori &amp; lassi</span>
       </button>
-      <button class="qbtn" onclick="toggleSection('rulesPanel', this)">
+      <button class="qbtn" aria-controls="rulesPanel" aria-expanded="false" onclick="toggleSection('rulesPanel', this)">
         <span class="ico">📜</span>
         <span class="label">Do's &amp; Don'ts</span>
         <span class="sub">House rules</span>
@@ -581,8 +581,23 @@ const reviewTemplates = {
 
 function toggleSection(panelId, btn) {
   const el = document.getElementById(panelId);
-  el.classList.toggle('show');
-  btn.classList.toggle('open');
+  if (!el) return;
+  const shouldOpen = !el.classList.contains('show');
+  const section = el.closest('section');
+
+  section.querySelectorAll('.options-panel').forEach(option => {
+    option.classList.remove('show');
+  });
+  section.querySelectorAll('.qbtn[aria-controls]').forEach(button => {
+    button.classList.remove('open');
+    button.setAttribute('aria-expanded', 'false');
+  });
+
+  if (shouldOpen) {
+    el.classList.add('show');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
 }
 
 const panel = document.getElementById('reviewPanel');
