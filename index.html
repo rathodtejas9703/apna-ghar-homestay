@@ -102,6 +102,30 @@
     margin: 0 0 12px;
   }
 
+  .qbtn.options-toggle {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+  }
+  .qbtn.options-toggle .label { font-size: 15.5px; }
+  .qbtn.options-toggle::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--ink-soft);
+    font-size: 14px;
+    transition: transform 0.2s ease;
+  }
+  .qbtn.options-toggle.open::after { transform: rotate(180deg); }
+
+  .options-panel {
+    display: none;
+    margin-top: 12px;
+  }
+  .options-panel.show { display: block; }
+
   .quick-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -128,12 +152,94 @@
   .qbtn .label { font-size: 14.5px; font-weight: 600; line-height: 1.25; }
   .qbtn .sub { font-size: 12px; color: var(--ink-soft); }
 
+  /* Review popover */
+  .review-panel {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+    margin-top: 10px;
+  }
+  .review-panel.show { display: block; }
+  .review-panel .stars {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .review-panel .stars button {
+    background: none;
+    border: none;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--line);
+    padding: 2px;
+  }
+  .review-panel .stars button.active { color: var(--marigold); }
+  .review-text-box {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin-bottom: 12px;
+    min-height: 60px;
+  }
+  .review-actions { display: flex; gap: 8px; }
+  .review-actions button, .review-actions a {
+    flex: 1;
+    text-align: center;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 10px 8px;
+    border-radius: 9px;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .review-actions .primary { background: var(--ganga); color: #F7F2E6; border: none; }
+  .review-actions button:active, .review-actions a:active { opacity: 0.85; }
+  .review-hint { font-size: 11px; color: var(--ink-soft); text-align: center; margin-top: 4px; }
+
   .wifi-card {
-    background: var(--ganga);
+    background: #6F5A43;
     color: #F7F2E6;
     border-radius: 16px;
     padding: 18px 18px 16px;
     margin-bottom: 22px;
+  }
+  .wifi-top {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .wifi-qr-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 7px;
+    flex-shrink: 0;
+    width: 84px;
+    height: 84px;
+  }
+  .wifi-qr-box img { width: 100%; height: 100%; display: block; }
+  .wifi-scan-text h3 {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    margin: 0 0 3px;
+  }
+  .wifi-scan-text p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.85;
+    line-height: 1.4;
   }
   .wifi-card .row-label {
     font-size: 11.5px;
@@ -201,17 +307,6 @@
   .info-row .k { font-size: 13.5px; color: var(--ink-soft); }
   .info-row .v { font-size: 14px; font-weight: 600; text-align: right; }
 
-  .pill {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--marigold-deep);
-    background: rgba(217,130,27,0.12);
-    border-radius: 20px;
-    padding: 2px 9px;
-    margin-left: 6px;
-  }
-
   .note-box {
     font-size: 12.5px;
     color: var(--ink-soft);
@@ -263,11 +358,6 @@
 
   <section>
     <div class="quick-grid">
-      <button class="qbtn" onclick="copyWifi()">
-        <span class="ico">📶</span>
-        <span class="label">Connect to WiFi</span>
-        <span class="sub">Tap to copy password</span>
-      </button>
       <a class="qbtn" href="tel:+919455738019">
         <span class="ico">📞</span>
         <span class="label">Call the Host</span>
@@ -278,46 +368,58 @@
         <span class="label">WhatsApp Host</span>
         <span class="sub">Requests &amp; help</span>
       </a>
-      <a class="qbtn" href="https://g.page/r/CSyEQo59NpYXEBM/review" target="_blank" rel="noopener">
+      <button class="qbtn" onclick="toggleReview()">
         <span class="ico">⭐</span>
         <span class="label">Leave a Review</span>
         <span class="sub">On Google Maps</span>
+      </button>
+      <a class="qbtn" href="https://www.instagram.com/_apnaghar_homestay?stkn=MTBybnNiNnczenJxYg==" target="_blank" rel="noopener">
+        <span class="ico">📷</span>
+        <span class="label">Instagram</span>
+        <span class="sub">@_apnaghar_homestay</span>
       </a>
     </div>
-  </section>
 
-  <section>
-    <div class="wifi-card">
-      <div class="row">
-        <div>
-          <div class="row-label">Network</div>
-          <div class="val">Apna Ghar HomeStay</div>
-        </div>
+    <div class="review-panel" id="reviewPanel">
+      <div class="stars" id="starRow">
+        <button data-v="1">★</button>
+        <button data-v="2">★</button>
+        <button data-v="3">★</button>
+        <button data-v="4">★</button>
+        <button data-v="5">★</button>
       </div>
-      <div class="row">
-        <div>
-          <div class="row-label">Password</div>
-          <div class="val" id="wifiPass">Banarasiya</div>
-        </div>
-        <button class="copy" onclick="copyWifi()">Copy</button>
+      <div class="review-actions">
+        <a class="primary" id="goToGoogle" href="https://g.page/r/CSyEQo59NpYXEBM/review" target="_blank" rel="noopener" onclick="copyReview()">Post on Google →</a>
       </div>
-      <div class="wifi-note">Tap "Copy" and paste it into your phone's WiFi password field.</div>
+      <div class="review-hint">Tap your rating once the Google page opens, then paste the copied text.</div>
     </div>
   </section>
 
   <section>
-    <h2 class="section-title">Your stay</h2>
-    <div class="info-card">
-      <div class="info-row"><span class="k">Check-in</span><span class="v">12:00 PM</span></div>
-      <div class="info-row"><span class="k">Check-out</span><span class="v">11:00 AM</span></div>
-      <div class="info-row"><span class="k">Laundry service</span><span class="v">₹20 / set</span></div>
-      <div class="info-row"><span class="k">Boat ride booking</span><span class="v">Ask the host</span></div>
+    <div class="quick-grid">
+      <button class="qbtn" onclick="toggleSection('nearbyPanel', this)">
+        <span class="ico">🗺️</span>
+        <span class="label">Explore Nearby</span>
+        <span class="sub">Ghats, temples &amp; markets</span>
+      </button>
+      <button class="qbtn" onclick="toggleSection('templePanel', this)">
+        <span class="ico">🛕</span>
+        <span class="label">Temple &amp; Aarti Timings</span>
+        <span class="sub">Kashi Vishwanath &amp; more</span>
+      </button>
+      <button class="qbtn" onclick="toggleSection('foodPanel', this)">
+        <span class="ico">🍛</span>
+        <span class="label">Local Food to Try</span>
+        <span class="sub">Chaat, kachori &amp; lassi</span>
+      </button>
+      <button class="qbtn" onclick="toggleSection('rulesPanel', this)">
+        <span class="ico">📜</span>
+        <span class="label">Do's &amp; Don'ts</span>
+        <span class="sub">House rules</span>
+      </button>
     </div>
-    <div class="note-box">Check-in / check-out times are set as given — let us know if these need adjusting. For laundry or a sunrise/sunset boat ride, just message the host on WhatsApp above.</div>
-  </section>
 
-  <section>
-    <h2 class="section-title">Explore nearby</h2>
+    <div class="options-panel" id="nearbyPanel">
     <div class="list-card">
       <a class="list-item" href="https://www.google.com/maps/search/?api=1&query=Kashi+Vishwanath+Temple+Varanasi" target="_blank" rel="noopener">
         <span class="ico">🛕</span>
@@ -350,10 +452,9 @@
         <span class="chev">→</span>
       </a>
     </div>
-  </section>
+    </div>
 
-  <section>
-    <h2 class="section-title">Temple &amp; aarti timings</h2>
+    <div class="options-panel" id="templePanel">
     <div class="info-card">
       <div class="info-row"><span class="k">Kashi Vishwanath — open</span><span class="v">3:00 AM – 11:00 PM</span></div>
       <div class="info-row"><span class="k">Mangala Aarti</span><span class="v">3:00 – 4:00 AM</span></div>
@@ -362,20 +463,18 @@
       <div class="info-row"><span class="k">Ganga Aarti (Dashashwamedh)</span><span class="v">~6:30 – 7:30 PM</span></div>
     </div>
     <div class="note-box">Timings shift slightly with the season and on festival days — the host can confirm the same-day schedule.</div>
-  </section>
+    </div>
 
-  <section>
-    <h2 class="section-title">Local food to try</h2>
+    <div class="options-panel" id="foodPanel">
     <div class="list-card">
       <div class="list-item"><span class="ico">🍛</span><span class="txt"><span class="name">Kashi Chaat Bhandar</span><span class="meta">Tamatar chaat, golgappe — Godowlia</span></span></div>
       <div class="list-item"><span class="ico">🥣</span><span class="txt"><span class="name">Ram Bhandar</span><span class="meta">Classic kachori-sabzi breakfast</span></span></div>
       <div class="list-item"><span class="ico">🥤</span><span class="txt"><span class="name">Blue Lassi Shop</span><span class="meta">Fruit lassi, near Manikarnika Ghat</span></span></div>
       <div class="list-item"><span class="ico">🍨</span><span class="txt"><span class="name">Pahalwan Lassi</span><span class="meta">Thick, malai-topped lassi</span></span></div>
     </div>
-  </section>
+    </div>
 
-  <section>
-    <h2 class="section-title">Do's &amp; don'ts</h2>
+    <div class="options-panel" id="rulesPanel">
     <div class="list-card">
       <ul class="plain">
         <li><span class="dot">✓</span> Carry a valid photo ID — mandatory at check-in</li>
@@ -390,22 +489,46 @@
         <li class="no"><span class="dot">✕</span> No loud music or parties in shared areas</li>
       </ul>
     </div>
+    </div>
+  </section>
+
+
+  <section>
+    <div class="wifi-card">
+      <div class="wifi-top">
+        <div class="wifi-qr-box">
+          <img src="data:image/png;base64,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" alt="Scan to join WiFi">
+        </div>
+        <div class="wifi-scan-text">
+          <h3>Scan to connect</h3>
+          <p>Point your phone's camera here — it'll offer to join automatically.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="row-label">Network</div>
+          <div class="val">Apna Ghar HomeStay</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="row-label">Password</div>
+          <div class="val" id="wifiPass">Banarasiya</div>
+        </div>
+        <button class="copy" onclick="copyWifi()">Copy</button>
+      </div>
+    </div>
   </section>
 
   <section>
-    <h2 class="section-title">Feedback</h2>
-    <div class="quick-grid">
-      <a class="qbtn" href="https://wa.me/919455738019?text=Hi%2C%20sharing%20some%20feedback%20about%20my%20stay%20at%20Apna%20Ghar%20HomeStay%3A%20" target="_blank" rel="noopener">
-        <span class="ico">📝</span>
-        <span class="label">Share Feedback</span>
-        <span class="sub">Direct to host on WhatsApp</span>
-      </a>
-      <a class="qbtn" href="https://www.instagram.com/_apnaghar_homestay?stkn=MTBybnNiNnczenJxYg==" target="_blank" rel="noopener">
-        <span class="ico">📷</span>
-        <span class="label">Follow on Instagram</span>
-        <span class="sub">@_apnaghar_homestay</span>
-      </a>
+    <h2 class="section-title">Your stay</h2>
+    <div class="info-card">
+      <div class="info-row"><span class="k">Check-in</span><span class="v">12:00 PM</span></div>
+      <div class="info-row"><span class="k">Check-out</span><span class="v">11:00 AM</span></div>
+      <div class="info-row"><span class="k">Laundry service</span><span class="v">₹20 / set</span></div>
+      <div class="info-row"><span class="k">Boat ride booking</span><span class="v">Ask the host</span></div>
     </div>
+    <div class="note-box">For laundry or a sunrise/sunset boat ride, just message the host on WhatsApp above.</div>
   </section>
 
   <footer>
@@ -437,6 +560,74 @@ function copyWifi() {
     try { document.execCommand('copy'); } catch (e) {}
     window.getSelection().removeAllRanges();
     done();
+  }
+}
+
+const reviewTemplates = {
+  5: [
+    "Had a wonderful stay at Apna Ghar HomeStay in Hathi Gali! The host was incredibly warm, the room was clean and comfortable, and the location — a short walk from Kashi Vishwanath Temple and the ghats — made exploring Varanasi so easy. Highly recommend!",
+    "One of the best homestays I've stayed at in Varanasi. Apna Ghar felt exactly like the name says — a home away from home. Spotless room, super helpful host, and you can't beat the location near the ghats. Will definitely come back.",
+    "Loved every bit of our stay at Apna Ghar HomeStay. Cozy, clean, and the host went out of his way to help us plan our temple visits and a sunrise boat ride. Right in the heart of old Varanasi. Five stars well deserved!",
+    "Fantastic experience at Apna Ghar HomeStay. Warm hospitality, comfortable rooms, and walking distance from the main ghats and Kashi Vishwanath Temple. Exactly what you want for an authentic Varanasi stay."
+  ],
+  4: [
+    "Really enjoyed our stay at Apna Ghar HomeStay. Comfortable rooms, a friendly host, and a great location close to the ghats and temples. A couple of small things could be better, but overall a lovely, homely stay in Varanasi — would recommend.",
+    "Good stay overall at Apna Ghar HomeStay — clean room, helpful host, and a location that's hard to beat for exploring Varanasi's ghats and temples on foot. Minor niggles aside, a solid choice for a homestay in the old city."
+  ],
+  3: [
+    "Decent stay at Apna Ghar HomeStay. The location near the ghats is a big plus and the host was helpful. There's room for improvement in a few areas, but it was a comfortable enough base for exploring Varanasi."
+  ]
+};
+
+function toggleSection(panelId, btn) {
+  const el = document.getElementById(panelId);
+  el.classList.toggle('show');
+  btn.classList.toggle('open');
+}
+
+const panel = document.getElementById('reviewPanel');
+const starButtons = document.querySelectorAll('#starRow button');
+let selectedRating = 5;
+let currentReviewText = "";
+
+function paintStars(rating) {
+  starButtons.forEach(b => b.classList.toggle('active', parseInt(b.dataset.v, 10) <= rating));
+}
+
+function pickTemplate(rating) {
+  const key = rating >= 5 ? 5 : (rating === 4 ? 4 : 3);
+  const list = reviewTemplates[key];
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function renderReview() {
+  currentReviewText = pickTemplate(selectedRating);
+}
+
+starButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedRating = parseInt(btn.dataset.v, 10);
+    paintStars(selectedRating);
+    renderReview();
+  });
+});
+
+function toggleReview() {
+  const isShown = panel.classList.contains('show');
+  if (isShown) {
+    panel.classList.remove('show');
+  } else {
+    panel.classList.add('show');
+    selectedRating = 5;
+    paintStars(selectedRating);
+    renderReview();
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function copyReview() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentReviewText).catch(() => {});
   }
 }
 </script>
