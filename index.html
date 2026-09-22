@@ -597,6 +597,9 @@ function toggleSection(panelId, btn) {
     el.classList.add('show');
     btn.classList.add('open');
     btn.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }
 }
 
