@@ -349,6 +349,59 @@
   ul.plain li .dot { color: var(--marigold); flex-shrink: 0; }
   ul.plain li.no .dot { color: var(--maroon); }
 
+  .referral-panel {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+    margin-top: 12px;
+  }
+  .referral-panel.show { display: block; }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .field input, .field textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 10px 11px;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--marigold);
+  }
+  .field textarea { resize: vertical; min-height: 50px; }
+  .field-row { display: flex; gap: 10px; }
+  .field-row .field { flex: 1; }
+  .referral-submit {
+    width: 100%;
+    text-align: center;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 12px 8px;
+    border-radius: 9px;
+    cursor: pointer;
+    border: none;
+    background: var(--ganga);
+    color: #F7F2E6;
+    text-decoration: none;
+    display: block;
+    margin-top: 4px;
+  }
+  .referral-submit:active { opacity: 0.85; }
+  .referral-hint { font-size: 11px; color: var(--ink-soft); text-align: center; margin-top: 8px; line-height: 1.5; }
+
   footer {
     text-align: center;
     padding-top: 10px;
@@ -552,6 +605,51 @@
     <div class="note-box">For laundry or a sunrise/sunset boat ride, just message the host on WhatsApp above.</div>
   </section>
 
+  <section>
+    <h2 class="section-title">Host tools</h2>
+    <button class="qbtn options-toggle" aria-controls="referralPanel" aria-expanded="false" onclick="toggleSection('referralPanel', this)">
+      <span class="ico">🤝</span>
+      <span class="label">Refer a Booking Elsewhere</span>
+    </button>
+
+    <div class="options-panel" id="referralPanel">
+      <div class="referral-panel" id="referralForm">
+        <div class="field">
+          <label for="refGuestName">Guest name</label>
+          <input type="text" id="refGuestName" placeholder="Who you're referring">
+        </div>
+        <div class="field">
+          <label for="refGuestPhone">Guest phone</label>
+          <input type="tel" id="refGuestPhone" placeholder="+91 ...">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="refGuests">No. of guests</label>
+            <input type="text" id="refGuests" placeholder="e.g. 4">
+          </div>
+          <div class="field">
+            <label for="refDates">Dates</label>
+            <input type="text" id="refDates" placeholder="e.g. 2–4 Nov">
+          </div>
+        </div>
+        <div class="field">
+          <label for="refHomestay">Referred to (homestay name)</label>
+          <input type="text" id="refHomestay" placeholder="Other homestay's name">
+        </div>
+        <div class="field">
+          <label for="refContact">Their contact</label>
+          <input type="tel" id="refContact" placeholder="Other homestay's phone">
+        </div>
+        <div class="field">
+          <label for="refNotes">Commission / notes</label>
+          <textarea id="refNotes" placeholder="Agreed commission, rate, or any other note"></textarea>
+        </div>
+        <button class="referral-submit" onclick="sendReferral()">Log Referral via WhatsApp</button>
+        <div class="referral-hint">Fills a WhatsApp message with these details so you have a record of the referral and commission owed.</div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="sign">धन्यवाद 🙏</div>
     Apna Ghar HomeStay · Hathi Gali, Varanasi<br>
@@ -668,6 +766,32 @@ function copyReview() {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(currentReviewText).catch(() => {});
   }
+}
+
+function sendReferral() {
+  const name = document.getElementById('refGuestName').value.trim();
+  const phone = document.getElementById('refGuestPhone').value.trim();
+  const guests = document.getElementById('refGuests').value.trim();
+  const dates = document.getElementById('refDates').value.trim();
+  const homestay = document.getElementById('refHomestay').value.trim();
+  const contact = document.getElementById('refContact').value.trim();
+  const notes = document.getElementById('refNotes').value.trim();
+
+  if (!name || !homestay) {
+    alert('Please fill in at least the guest name and the homestay you referred them to.');
+    return;
+  }
+
+  const lines = [
+    'Referral Booking Log — Apna Ghar HomeStay',
+    `Guest: ${name}${phone ? ' (' + phone + ')' : ''}`,
+    `Guests: ${guests || '-'}`,
+    `Dates: ${dates || '-'}`,
+    `Referred to: ${homestay}${contact ? ' (' + contact + ')' : ''}`,
+    `Commission/notes: ${notes || '-'}`
+  ];
+  const text = encodeURIComponent(lines.join('\n'));
+  window.open(`https://wa.me/919455738019?text=${text}`, '_blank', 'noopener');
 }
 </script>
 </body>
